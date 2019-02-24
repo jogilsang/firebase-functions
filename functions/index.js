@@ -49,11 +49,13 @@ exports.addXlsxToFirestore = functions.storage.object().onFinalize(async (object
     const fileBucket = object.bucket; // The Storage bucket that contains the file.
     const filePath = object.name; // File path in the bucket.
     const contentType = object.contentType; // File content type.
+    console.log("contentType : ", contentType);
+
     const metageneration = object.metageneration; // Number of times metadata has been generated. New objects have a value of 1.
     // [END eventAttributes]
 
-    if (!contentType.startsWith('file/')) {
-        return console.log('This is not an file.');
+    if (!contentType.startsWith('application/haansoftxlsx')) {
+        return console.log('This is not an application/haansoftxlsx');
     }
     const fileName = path.basename(filePath);
     // [END stopConditions]
@@ -71,7 +73,9 @@ exports.addXlsxToFirestore = functions.storage.object().onFinalize(async (object
 
     // TODO : 액셀 파일 
     // 액셀 파일을 읽는다.
-    var workbook = XLSX.readFile(fileName);
+    // var workbook = XLSX.readFile(fileName);
+    var workbook = XLSX.readFile(tempFilePath);
+
     var sheetNames = workbook.SheetNames;
     
     var sheetIndex = 1;
